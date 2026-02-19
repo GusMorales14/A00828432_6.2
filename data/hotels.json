@@ -1,0 +1,20 @@
+[
+  {
+    "hotel_id": "H1",
+    "hotel_name": "Fiesta Inn",
+    "total_rooms": 10,
+    "available_rooms": 8
+  },
+  {
+    "hotel_id": "H2",
+    "hotel_name": "City Express",
+    "total_rooms": 20,
+    "available_rooms": 20
+  },
+  {
+    "hotel_id": "H3",
+    "hotel_name": "Grand Plaza",
+    "total_rooms": 15,
+    "available_rooms": 5
+  }
+]
