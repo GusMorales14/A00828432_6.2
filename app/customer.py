@@ -51,3 +51,72 @@ class Customer:
             except (KeyError, TypeError, ValueError):
                 print(f"Invalid record skipped: {item}")
         return customers
+    
+    @classmethod
+    def _save_all(cls, customers):
+        """Save all customers to JSON file."""
+        cls.file_path.parent.mkdir(exist_ok=True)
+
+        with open(cls.file_path, "w", encoding="utf-8") as file:
+            json.dump(
+                [customer.to_dict() for customer in customers],
+                file,
+                indent=2,
+            )
+
+    @classmethod
+    def create_customer(cls, customer):
+        """Create a customer and persist it."""
+        customers = cls._load_all()
+
+        if any(c.customer_id == customer.customer_id for c in customers):
+            raise ValueError("Customer already exists")
+
+        customers.append(customer)
+        cls._save_all(customers)
+
+    @classmethod
+    def delete_customer(cls, customer_id):
+        """Delete a customer by id."""
+        customers = cls._load_all()
+        filtered = [c for c in customers if c.customer_id != customer_id]
+
+        if len(filtered) == len(customers):
+            raise KeyError("Customer not found")
+
+        cls._save_all(filtered)
+
+    @classmethod
+    def display_customer_info(cls, customer_id):
+        """Return a customer by id."""
+        customers = cls._load_all()
+
+        for customer in customers:
+            if customer.customer_id == customer_id:
+                return customer
+
+        raise KeyError("Customer not found")
+
+    @classmethod
+    def modify_customer_info(cls, customer_id, **kwargs):
+        """Modify fields of an existing customer."""
+        customers = cls._load_all()
+        found = False
+
+        for customer in customers:
+            if customer.customer_id == customer_id:
+                for key, value in kwargs.items():
+                    if hasattr(customer, key):
+                        setattr(customer, key, value)
+
+                if not customer.customer_id:
+                    raise ValueError("customer_id cannot be empty")
+                if not customer.customer_name:
+                    raise ValueError("customer_name cannot be empty")
+
+                found = True
+
+        if not found:
+            raise KeyError("Customer not found")
+
+        cls._save_all(customers)

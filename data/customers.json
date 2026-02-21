@@ -1,0 +1,14 @@
+[
+  {
+    "customer_id": "C1",
+    "customer_name": "Ana"
+  },
+  {
+    "customer_id": "C2",
+    "customer_name": "Quique"
+  },
+  {
+    "customer_id": "C3",
+    "customer_name": "Meli"
+  }
+]
