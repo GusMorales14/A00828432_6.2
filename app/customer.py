@@ -3,8 +3,10 @@
 import json
 from pathlib import Path
 
+
 class Customer:
-    
+    """Customer Module takes data from JSON file"""
+
     file_path = Path(r"A00828432_6.2\data\customers.json")
 
     def __init__(self, customer_id, customer_name):
@@ -51,7 +53,7 @@ class Customer:
             except (KeyError, TypeError, ValueError):
                 print(f"Invalid record skipped: {item}")
         return customers
-    
+
     @classmethod
     def _save_all(cls, customers):
         """Save all customers to JSON file."""
