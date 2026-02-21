@@ -1,7 +1,12 @@
 """Reservation Module"""
 
+
 import json
 from pathlib import Path
+
+from app.hotel import Hotel
+from app.customer import Customer
+
 
 class Reservation:
     """Represents a reservation linking a customer to a hotel."""
@@ -40,7 +45,7 @@ class Reservation:
             "customer_id": self.customer_id,
             "status": self.status,
         }
-    
+
     @classmethod
     def from_dict(cls, data):
         """Create Reservation from dictionary."""
@@ -88,3 +93,51 @@ class Reservation:
                 file,
                 indent=2,
             )
+
+    @classmethod
+    def create_reservation(cls, reservation):
+        """
+        Create a reservation (Customer, Hotel).
+        """
+        reservations = cls._load_all()
+
+        if any(
+            r.reservation_id == reservation.reservation_id
+            for r in reservations
+                ):
+            raise ValueError("Reservation already exists")
+
+        # Validate existence of hotel & customer
+        Hotel.display_hotel_info(reservation.hotel_id)
+        Customer.display_customer_info(reservation.customer_id)
+
+        # Reserve one room (may raise KeyError/ValueError)
+        Hotel.reserve_room(reservation.hotel_id)
+
+        reservations.append(reservation)
+        cls._save_all(reservations)
+
+    @classmethod
+    def cancel_reservation(cls, reservation_id):
+        """
+        Cancel a reservation by id and persist changes.
+        """
+        reservations = cls._load_all()
+        found = False
+
+        for reservation in reservations:
+            if reservation.reservation_id == reservation_id:
+                found = True
+
+                if reservation.status == cls.STATUS_CANCELLED:
+                    raise ValueError("Reservation already cancelled")
+
+                reservation.status = cls.STATUS_CANCELLED
+                cls._save_all(reservations)
+
+                # Release one room back to the hotel
+                Hotel.cancel_reservation(reservation.hotel_id)
+                return
+
+        if not found:
+            raise KeyError("Reservation not found")
