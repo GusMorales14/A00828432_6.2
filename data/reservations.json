@@ -1,0 +1,14 @@
+[
+  {
+    "reservation_id": "R1",
+    "hotel_id": "H1",
+    "customer_id": "C1",
+    "status": "ACTIVE"
+  },
+  {
+    "reservation_id": "R2",
+    "hotel_id": "H2",
+    "customer_id": "C2",
+    "status": "CANCELLED"
+  }
+]
