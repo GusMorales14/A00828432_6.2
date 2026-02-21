@@ -68,7 +68,8 @@ class Hotel:
     @classmethod
     def _save_all(cls, hotels):
         """Saves the JSON File  in file_path"""
-        cls.file_path.parent.mkdir(exist_ok=True)
+        cls.file_path.parent.mkdir(parents=True, 
+                                   exist_ok=True)
 
         with open(cls.file_path, "w", encoding="utf-8") as file:
             json.dump(

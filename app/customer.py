@@ -57,7 +57,8 @@ class Customer:
     @classmethod
     def _save_all(cls, customers):
         """Save all customers to JSON file."""
-        cls.file_path.parent.mkdir(exist_ok=True)
+        cls.file_path.parent.mkdir(parents=True, 
+                                   exist_ok=True)
 
         with open(cls.file_path, "w", encoding="utf-8") as file:
             json.dump(
