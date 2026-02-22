@@ -1,5 +1,5 @@
 """Reservation Module"""
-
+# pylint: disable=duplicate-code
 
 import json
 from pathlib import Path

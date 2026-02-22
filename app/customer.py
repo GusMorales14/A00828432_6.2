@@ -1,4 +1,5 @@
 """Customer module"""
+# pylint: disable=duplicate-code
 
 import json
 from pathlib import Path
