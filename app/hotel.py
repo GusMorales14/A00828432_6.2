@@ -7,7 +7,7 @@ from pathlib import Path
 class Hotel:
     """This class represents a hotel and its operations"""
 
-    file_path = Path(r"A00828432_6.2\data\hotels.json")
+    file_path = Path(r"data\hotels.json")
 
     def __init__(self, hotel_id, hotel_name,
                  total_rooms, available_rooms):
@@ -17,8 +17,10 @@ class Hotel:
             raise ValueError("hotel_id is empty")
         if not total_rooms:
             raise ValueError("total_rooms is empty")
-        if not available_rooms:
-            raise ValueError("available_rooms is empty")
+        if available_rooms is None:
+            raise ValueError("available_rooms cannot be None")
+        if available_rooms < 0 or available_rooms > total_rooms:
+            raise ValueError("Invalid available_rooms value")
 
         self.hotel_id = hotel_id
         self.hotel_name = hotel_name
@@ -57,6 +59,10 @@ class Hotel:
             print("Invalid JSON file")
             return []
 
+        if not isinstance(data, list):
+            print("Invalid JSON structure: expected a list")
+            return []
+
         hotels = []
         for item in data:
             try:
@@ -67,26 +73,26 @@ class Hotel:
 
     @classmethod
     def _save_all(cls, hotels):
-        """Saves the JSON File  in file_path"""
-        cls.file_path.parent.mkdir(parents=True,
-                                   exist_ok=True)
+        """Save all hotels to JSON file."""
+        cls.file_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(cls.file_path, "w", encoding="utf-8") as file:
             json.dump(
                 [hotel.to_dict() for hotel in hotels],
                 file,
-                indent=2
+                indent=2,
             )
 
     @classmethod
     def create_hotel(cls, hotel):
-        """Creates new hotel register"""
+        """Creates new hotel register."""
         hotels = cls._load_all()
 
         if any(h.hotel_id == hotel.hotel_id for h in hotels):
             raise ValueError("Hotel already exists")
 
         hotels.append(hotel)
+        cls._save_all(hotels)
 
     @classmethod
     def delete_hotel(cls, hotel_id):
